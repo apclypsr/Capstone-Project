@@ -1,0 +1,36 @@
+#sql for pulling raw data. NEED TO UPDATE WITH MOST CURRENT VERSION
+
+use [AMTUsmtoDB];
+SELECT  TOP 100
+    [OrderID]
+      ,[AAID]
+      ,[OrderDate]
+      ,[NAICSID]
+      ,[CustomerZipCode]
+      ,[ShippingCountryID]
+      ,[ShippingZipCode]
+      ,[IsCancel]
+      ,[CancelOrderID]
+      ,[IsMatch]
+      ,[IsIgnore]
+      ,[Units]
+      ,[TotalSale]
+      ,[CreatedBy]
+      ,[CreateDate]
+      ,[ChangedBy]
+      ,[ChangedDate]
+      ,[IsSubmitted]
+      ,dmac.[TopCategoryName]
+      ,dmac.[SubCategory]
+      ,dmac.[SubCategoryName]
+      ,dmac.[Description]
+      ,dmac.[MachineCode]
+      
+     -- ,tcos.[EntryMonth]
+     -- ,tcos.[EntryYear]
+      --,tcos.[SubmitDate]
+  FROM [dbo].[tblOrder] ord
+  --INNER JOIN [tblCompanyOrderSubmit] tcos ON ord.OrderID = tcos.[CompanyOrderSubmitID]
+  INNER JOIN dbo.tblMachine mac ON ord.MachineID = mac.MachineID
+  INNER JOIN [DIM_MACHINE] dmac ON mac.MachineFactID = dmac.[MachineID]
+  INNER JOIN [tblCompany] comp ON ord.AAID = comp.AAID
