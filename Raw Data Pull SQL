@@ -1,9 +1,8 @@
-#sql for pulling raw data. NEED TO UPDATE WITH MOST CURRENT VERSION
-
+--/ Script for SelectTopNRows command from SSMS  /
 use [AMTUsmtoDB];
-SELECT  TOP 100
+SELECT 
     [OrderID]
-      ,[AAID]
+      ,ord.[AAID]
       ,[OrderDate]
       ,[NAICSID]
       ,[CustomerZipCode]
@@ -15,22 +14,23 @@ SELECT  TOP 100
       ,[IsIgnore]
       ,[Units]
       ,[TotalSale]
-      ,[CreatedBy]
-      ,[CreateDate]
-      ,[ChangedBy]
-      ,[ChangedDate]
-      ,[IsSubmitted]
+      ,ord.[CreatedBy]
+      ,ord.[CreateDate]
+      ,ord.[ChangedBy]
+      ,ord.[ChangedDate]
+      ,ord.[IsSubmitted]
       ,dmac.[TopCategoryName]
       ,dmac.[SubCategory]
       ,dmac.[SubCategoryName]
       ,dmac.[Description]
       ,dmac.[MachineCode]
       
-     -- ,tcos.[EntryMonth]
-     -- ,tcos.[EntryYear]
-      --,tcos.[SubmitDate]
+     ,tcos.[EntryMonth]
+     ,tcos.[EntryYear]
+      ,tcos.[SubmitDate]
   FROM [dbo].[tblOrder] ord
   --INNER JOIN [tblCompanyOrderSubmit] tcos ON ord.OrderID = tcos.[CompanyOrderSubmitID]
   INNER JOIN dbo.tblMachine mac ON ord.MachineID = mac.MachineID
   INNER JOIN [DIM_MACHINE] dmac ON mac.MachineFactID = dmac.[MachineID]
   INNER JOIN [tblCompany] comp ON ord.AAID = comp.AAID
+  INNER JOIN [tblCompanyOrderSubmit] tcos ON comp.CompanyID = tcos.CompanyID AND tcos.EntryMonth = month(ord.OrderDate) AND tcos.EntryYear = year(ord.OrderDate)
